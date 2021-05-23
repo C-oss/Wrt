@@ -49,7 +49,7 @@ jobs:
         sudo mkdir -p /workdir
         sudo chown $USER:$GROUPS /workdir
 
-    - name: Clone Source Code
+    - name: Clone Code
       working-directory: /workdir
       run: |
         df -hT $PWD
