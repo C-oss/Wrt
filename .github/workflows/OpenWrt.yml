@@ -117,6 +117,18 @@ jobs:
       run: |
         cd openwrt/bin/targets/*/*
         rm -rf packages
+        rm -rf "*.manifest"
+        rm -rf $(find ./ -type f -name "*rootfs*")
+        rm -rf $(find ./ -type f -name "*kernel*")
+        sed -i /".*rootfs.img"/d sha256sums
+        sed -i "s/op.*combined/${{ env.iTAG }}/g" sha256sums
+        sed -i "s/op.*kernel/${{ env.iTAG }}-kernel/g" sha256sums
+        sed -i "s/op.*generic/${{ env.iTAG }}/g" sha256sums
+        rename -v "s/config.*/${{ env.iTAG }}.config/" *
+        rename -v "s/.*.manifest/${{ env.iTAG }}.manifest/" *
+        rename -v "s/.*combined/${{ env.iTAG }}/" *
+        rename -v "s/^sha256sums$/${{ env.iTAG }}-sha256sums/" *
+        ls | xargs -i tar zcvf {}.tar.gz {} --remove-files
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
         echo "::set-output name=status::success"
 
